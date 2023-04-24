@@ -1,7 +1,7 @@
 import json
 
-import quart
-import quart_cors
+import quart # quart is an async version of flask
+import quart_cors # quart_cors is a CORS plugin for quart is used to allow cross-origin requests
 from quart import request
 
 app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.com")
@@ -9,6 +9,7 @@ app = quart_cors.cors(quart.Quart(__name__), allow_origin="https://chat.openai.c
 # Keep track of todo's. Does not persist if Python session is restarted.
 _TODOS = {}
 
+# The following routes are used by the plugin to interact with the plugin server
 @app.post("/todos/<string:username>")
 async def add_todo(username):
     request = await quart.request.get_json(force=True)
@@ -30,6 +31,7 @@ async def delete_todo(username):
         _TODOS[username].pop(todo_idx)
     return quart.Response(response='OK', status=200)
 
+# metadata routes
 @app.get("/logo.png")
 async def plugin_logo():
     filename = 'logo.png'
